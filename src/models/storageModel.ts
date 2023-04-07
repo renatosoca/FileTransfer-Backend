@@ -1,14 +1,13 @@
-import { model, Schema } from "mongoose";
-import { File } from "../interfaces";
+import { model, Schema } from 'mongoose';
+import { Storage } from '../interfaces';
 
-
-const fileSchema = new Schema<File>({
-  name: {
+const storageSchema = new Schema<Storage>({
+  originalName: {
     type: String,
     required: true,
     trim: true,
   },
-  originalName: {
+  name: {
     type: String,
     required: true,
     trim: true,
@@ -36,4 +35,4 @@ const fileSchema = new Schema<File>({
   }
 }, { timestamps: true, versionKey: false });
 
-export default model<File>( 'File', fileSchema )
+export default model<Storage>( 'Storage', storageSchema )

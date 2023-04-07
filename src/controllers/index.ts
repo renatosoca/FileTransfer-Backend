@@ -1,3 +1,3 @@
 export * from './index';
-export * from './uploadController';
+export * from './storageController';
 export * from './userController';

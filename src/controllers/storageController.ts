@@ -1,35 +1,37 @@
-import { NextFunction, Response } from 'express';
-import fs from 'fs';
+import { Response } from 'express';
+/* import fs from 'fs'; */
 import { AuthRequest } from '../interfaces';
-import { fileModel } from '../models';
-import { generateURL, hashPassword } from '../utils';
+import { storageModel } from '../models';
+import { generateURL } from '../utils';
+import { hashPassword } from '../utils';
 
-export const uploadFile = async ({ body, user }: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-  const { originalName, download, password } = body;
-  const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:4003';
+export const uploadFile = async ({ user, file, body }: AuthRequest, res: Response) => {
+  if (!file) return res.status(400).json({ ok: false, msg: 'No se ha seleccionado ningún archivo' });
+  const { password, download } = body;
+  const PUBLIC_URL = process.env.PUBLIC_URL || '';
 
   try {
-    const file = new fileModel(body);
-    file.url = `${PUBLIC_URL}/${generateURL(originalName.split('.')[0])}`;
-    file.name = generateURL(originalName.split('.')[0]);
+    const storage = new storageModel(file);
+    storage.originalName = file.originalname;
+    storage.url = `${PUBLIC_URL}/${file.filename}`;
+    storage.name = generateURL( file.originalname.split(/[^a-zA-Z0-9]+/)[0] );
 
     if (user) {
-      file.user = user;
+      storage.user = user;
 
-      if (download) file.download = download;
-      if (password) file.password = hashPassword(password);
+      if (download) storage.download = download;
+      if (password) storage.password = hashPassword(password);
     }
 
     //await file.save();
 
-    res.status(201).json({ file, user })
-    next()
+    return res.status(201).json({ file, user, storage })
   } catch (error) {
-    res.status(500).json({ ok: false, msg: 'Error del sistema, contacte al administrador'});
+    return res.status(500).json({ ok: false, msg: 'Error del sistema, contacte al administrador'});
   }
 }
 
-export const uploadFileNow = async ({ file, user }: AuthRequest, res: Response) => {
+/* export const uploadFileNow = async ({ file, user }: AuthRequest, res: Response) => {
   if (!file) return res.status(400).json({ ok: false, msg: 'No se ha seleccionado ningún archivo' });
 
   try {
@@ -69,4 +71,4 @@ export const deleteFile = async ({ params }: AuthRequest, _: Response) => {
   } catch (error) {
     
   }
-}
+} */

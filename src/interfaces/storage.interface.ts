@@ -1,8 +1,8 @@
-import { User } from "./user.interface";
+import { User } from './user.interface';
 
-export interface File {
-  name: string;
+export interface Storage {
   originalName: string;
+  name: string;
   download: number;
   url: string;
   password: string | null;

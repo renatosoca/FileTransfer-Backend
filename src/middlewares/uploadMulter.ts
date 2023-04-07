@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import multer, { diskStorage } from 'multer';
 import { AuthRequest } from '../interfaces';
 
-export const multerMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const uploadMulter = (req: AuthRequest, res: Response, next: NextFunction) => {
   multer({
     limits: { fileSize: req.user ? 1024 * 1024 * 10 : 1024 * 1024 },
     storage: diskStorage({

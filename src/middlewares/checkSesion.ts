@@ -3,7 +3,7 @@ import { AuthRequest } from "../interfaces";
 import { userModel } from "../models";
 import { verifyJWT } from "../utils";
 
-export const checkSesion = async (req: AuthRequest, _: Response, next: NextFunction) => {
+export const checkSesion = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if ( req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -11,11 +11,11 @@ export const checkSesion = async (req: AuthRequest, _: Response, next: NextFunct
 
       const { _id } = verifyJWT( jwt );
 
-      req.user = await userModel.findById( _id).select('-password').select('-createdAt -updatedAt') ?? undefined;
+      req.user = await userModel.findById( _id).select('-password -createdAt -updatedAt') ?? undefined;
       
       return next();
     } catch (error) {
-      console.log(error)
+      res.status(401).json({ok: false, msg: 'Token no válido'});
       return next();
     }
   } 
