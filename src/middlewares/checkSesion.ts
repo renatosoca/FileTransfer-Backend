@@ -3,7 +3,7 @@ import { AuthRequest } from "../interfaces";
 import { userModel } from "../models";
 import { verifyJWT } from "../utils";
 
-export const checkSesion = async (req: AuthRequest, _: Response, next: NextFunction): Promise<void> => {
+export const checkSesion = async (req: AuthRequest, _: Response, next: NextFunction) => {
 
   if ( req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -11,13 +11,14 @@ export const checkSesion = async (req: AuthRequest, _: Response, next: NextFunct
 
       const { _id } = verifyJWT( jwt );
 
-      req.user = await userModel.findById( _id).select('-password') ?? undefined;
+      req.user = await userModel.findById( _id).select('-password').select('-createdAt -updatedAt') ?? undefined;
       
-      next();
+      return next();
     } catch (error) {
       console.log(error)
+      return next();
     }
-  }
+  } 
   
-  next();
+  return next()
 }

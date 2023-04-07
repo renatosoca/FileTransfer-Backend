@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request } from 'express';
 import { User } from './';
 
 export interface Auth {
