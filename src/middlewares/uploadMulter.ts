@@ -3,7 +3,7 @@ import multer, { diskStorage } from 'multer';
 import { AuthRequest } from '../interfaces';
 
 export const uploadMulter = (req: AuthRequest, res: Response, next: NextFunction) => {
-  multer({
+  return multer({
     limits: { fileSize: req.user ? 1024 * 1024 * 10 : 1024 * 1024 },
     storage: diskStorage({
       destination: (_: Request, __: Express.Multer.File, cb: any) => {
@@ -16,5 +16,6 @@ export const uploadMulter = (req: AuthRequest, res: Response, next: NextFunction
         cb(null, fileName);
       },
     })
-  }).single('myFile')(req,res,next);
+  })
+    .single('myFile')(req, res, next);
 } 

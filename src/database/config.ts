@@ -1,4 +1,4 @@
-import { set, connect, ConnectOptions } from 'mongoose';
+import { set, connect } from 'mongoose';
 
 export const dbConnection = async (): Promise<void> => {
   set('strictQuery', false);
@@ -6,10 +6,7 @@ export const dbConnection = async (): Promise<void> => {
   try {
     const mongoUri: string = process.env.MONGO_URI || '';
 
-    const db = await connect( mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as ConnectOptions);
+    const db = await connect( mongoUri );
 
     console.log(`PORT: ${db.connection.port} | Database: ${db.connection.name}`);
   } catch (error) {
